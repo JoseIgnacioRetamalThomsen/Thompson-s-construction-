@@ -1,39 +1,21 @@
-from src.gmit.re.MapTransitionFunction import  MapTransitionFuncion
+from src.gmit.re.com import MapTransitionFunction
+
+
 
 class Runner:
-
-    #main method, start of program
+    # main method, start of program
     if __name__ == '__main__':
-        print("Working");
 
+        # create automata that regonize only 1
+        n = MapTransitionFunction.NFA(1)
+        print(n.run("1"))
+        print(n.run("01"))
+        print(n.run("11"))
+        # add transition for the automata to recognize any number of 1'
+        n.tf.addTransition(2,1,{2})
+        print(n.run("111111111111111111111"))
+        print(n.run("1111111111111111111110"))
+        print(n.run("0111111111111111111111"))
 
-        ##trnaasition function for most simple automata
-        # automate accept only string 1, accept state is q1
-
-        tf = MapTransitionFuncion()
-        tf.addTransition(0, 1, 1);
-        ##start wiht -1
-        aState = set()
-        aState = aState.union({tf.getState(-1,-1)});
-        print("first state:")
-        print( aState)
-        #go with one
-        print("final state")
-        aState1 = set()
-
-        for x in aState:
-            aState1 = aState1.union({tf.getState(x,1)})
-
-        print(aState1)
-        # try another 1 so would have no state
-        aState = set()
-
-        for x in aState1:
-            aState = aState.union({tf.getState(x,1)})
-            
-        print(aState)
-
-
-
-
-
+        n1=MapTransitionFunction.NFA(0);
+        print(n1.run("0"))
