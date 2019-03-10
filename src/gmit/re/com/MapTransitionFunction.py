@@ -36,10 +36,11 @@ class TransitionFuncion:
 
 class TransitionFunctionNFA:
 
+    # constructor
     def __init__(self, initial_state):
 
         # map that define the transitions
-        self.m = {0: [{-1: {initial_state}}]}  # send to initial state
+        self.m = {0: {-1: {initial_state}}}  # send to initial state
 
     # prints the transitions
     def printF(self):
@@ -47,64 +48,149 @@ class TransitionFunctionNFA:
 
     # get set of states for the state and symbol in the parameters
     def getTransition(self, state, symbol):
-        # loop for all the maps of states in m
-        if self.m.get(state) != None:
-            for x in self.m.get(state):
-                # check if the current map has the symbol as key
-                if (symbol in x.keys()):
-                    # if the map has that key return the set of states
-                    return x.get(symbol)
 
+        # check state in map
+        if self.m.get(state) is not None:
+            x = self.m.get(state)
+
+            # check symbol in
+            if x.get(symbol) is not None:
+                # return the state after if it is
+                return x.get(symbol)
+
+    #  add new transition to map
     def addTransition(self, state, symbol, results={}):
-        # check if the state and symbol are in the structure
-        states = self.getTransition(state, symbol)
 
-        if states != None:
-            for x in self.m.get(state):
-                if symbol in x.keys():
-                    x[symbol] = x.get(symbol) | results
-                    break
-        else:
-            if self.m.get(state) != None:
-                self.m.get(state).append({symbol: results})
+        # check if state is in map
+        x = self.m.get(state)
+        if x is not None:
+            # check if symbol is in state map
+            if symbol in x.keys():
+                # state and symbol are in so append
+                x[symbol] = x.get(symbol) | results
             else:
-                self.m[state] = [{symbol: results}]
+                # only state is so add the new sybmol to map
+                self.m.get(state).append({symbol: results})
+        else:
+            # add new entry to map
+            self.m[state] = {symbol: results}
 
 
 class NFA:
-    stateCount = 1
 
+    # class state count
+    stateCount = int
+
+    @staticmethod
+    def initStateCount(init):
+        NFA.stateCount = init
+
+    # give the next state
+    @staticmethod
+    def getNexState():
+        NFA.stateCount += 1
+        return NFA.stateCount
+
+    # create the simple NFA with 1 transtion (accept a one symbol string)
     def __init__(self, symbol):
 
+        # all different states
+        #self.stateCount = initialState
+        self.stateCount = NFA.getNexState()
+
+        # the map of transitions
         self.tf = TransitionFunctionNFA(self.stateCount)
+
+        # the initial state
         self.initialState = self.stateCount
-        self.stateCount += 1
+
+        #
+        # need to check this for have a state helper or something like that
+        #
+        # increase state count
+        #self.stateCount += 1
+
+        # actual set of states
         self.actualState = {}
 
         # add transition for symbol
-        self.tf.addTransition(self.initialState, symbol, {self.stateCount})
-        self.acceptState = self.stateCount
-        self.stateCount += 1
 
-    def run(self, string):
-        self.actualState = set()
-        self.actualState = self.actualState | self.tf.getTransition(0, -1)
+        # the transition will go to the accept state
+        #self.acceptState = self.stateCount
+       # self.stateCount += 1
+        self.acceptState = NFA.getNexState()
 
-        self.nextState = set()
+        self.tf.addTransition(self.initialState, symbol, {self.acceptState})
 
-        for symbol in string:
-
-            for state in self.actualState:
-
-                if self.tf.getTransition(state, int(symbol)) is not None:
-                    self.nextState = self.nextState | self.tf.getTransition(state, int(symbol))
-
-                self.actualState = set() | self.nextState
-                if len(self.actualState) is 0:
-                    return False
-
-                self.nextState.clear()
-
-        if self.acceptState in self.actualState:
-            return True
-        return False
+# class NFA:
+#
+#
+#
+#     def __init__(self, symbol,startState):
+#
+#         self.stateCount =  startState
+#         self.start = startState
+#         self.tf = TransitionFunctionNFA(self.stateCount)
+#         self.initialState = self.stateCount
+#         self.stateCount += 1
+#         self.actualState = {}
+#
+#         # add transition for symbol
+#         self.tf.addTransition(self.initialState, symbol, {self.stateCount})
+#         self.acceptState = self.stateCount
+#         self.stateCount += 1
+#
+#     def run(self, string):
+#         self.actualState = set()
+#         self.actualState = self.actualState | self.tf.getTransition(0, -1)
+#
+#         self.nextState = set()
+#
+#         for symbol in string:
+#
+#             for state in self.actualState:
+#
+#                 if self.tf.getTransition(state, int(symbol)) is not None:
+#                     self.nextState = self.nextState | self.tf.getTransition(state, int(symbol))
+#
+#                 self.actualState = set() | self.nextState
+#                # print(self.actualState)
+#                 #if len(self.actualState) is 0:
+#                   #  return False
+#
+#             self.nextState.clear()
+#
+#        # print("get here")
+#       #  print(self.actualState)
+#         if self.acceptState in self.actualState:
+#             return True
+#         return False
+#
+#     def andAutomata(self,automata):
+#         print(automata.tf.m)
+#
+#         temp = automata.tf.m.pop(0)
+#         print("pop")
+#         print(temp[0].get(-1))
+#
+#         for x,y in self.tf.m.items():
+#             for j in y:
+#                 for x1,y1 in j.items():
+#                     if self.acceptState in y1:
+#                         self.tf.addTransition(x,x1,{automata.start})
+#                         self.tf.addTransition(x, x1, temp[0].get(-1))
+#                         self.stateCount += 1
+#
+#
+#
+#        # print(automata.acceptState)
+#         self.acceptState = automata.acceptState
+#        # print(self.acceptState)
+#
+#         #merge
+#         self.tf.m = {**self.tf.m , **automata.tf.m}
+#
+#     def orAutomata(self,automata):
+#         print("or")
+#         newStart = self.tf.m#.pop(0)[0].get(-1)
+#         print(newStart)
