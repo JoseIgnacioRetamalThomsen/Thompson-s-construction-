@@ -77,7 +77,6 @@ class TransitionFunctionNFA:
 
 
 class NFA:
-
     # class state count
     stateCount = int
 
@@ -93,9 +92,8 @@ class NFA:
 
     # create the simple NFA with 1 transtion (accept a one symbol string)
     def __init__(self, symbol):
-
         # all different states
-        #self.stateCount = initialState
+        # self.stateCount = initialState
         self.stateCount = NFA.getNexState()
 
         # the map of transitions
@@ -104,23 +102,51 @@ class NFA:
         # the initial state
         self.initialState = self.stateCount
 
-        #
-        # need to check this for have a state helper or something like that
-        #
-        # increase state count
-        #self.stateCount += 1
-
         # actual set of states
-        self.actualState = {}
+        self.actualState = set()
 
         # add transition for symbol
 
         # the transition will go to the accept state
-        #self.acceptState = self.stateCount
-       # self.stateCount += 1
         self.acceptState = NFA.getNexState()
-
         self.tf.addTransition(self.initialState, symbol, {self.acceptState})
+
+    # run the automate
+    # returnt true if string is accepted false if not
+    def run(self, string):
+        print("runnin")
+        # actual state
+        actualState = self.actualState
+
+        # go to initial state
+        # note o and -1 are always used for start
+        actualState = actualState | self.tf.getTransition(0, -1)
+
+
+        # results states after run one symbol
+        nextState = set()
+
+        # loop through each character in the string
+        for symbol in string:
+            # loop througj all acutal states
+            for state in actualState:
+                # check for trasition on state  and symbol
+                tempStates = self.tf.getTransition(state, int(symbol))
+                if tempStates is not None:
+                    # all new states
+                    nextState =  nextState | tempStates
+
+            # add states for next symbol
+            actualState = set() | nextState
+            # clear
+            nextState.clear()
+
+        # check if any of the last state is accepted
+        if self.acceptState in actualState:
+            return True
+        return False
+
+
 
 # class NFA:
 #

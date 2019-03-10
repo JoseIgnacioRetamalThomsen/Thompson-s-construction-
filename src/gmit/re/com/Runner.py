@@ -15,3 +15,5 @@ class Runner:
         a2 = MapTransitionFunction.NFA(2)
 
         a2.tf.printF()
+
+        print(a1.run("0"))
