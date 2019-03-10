@@ -17,5 +17,5 @@ class Runner:
         a2.tf.printF()
 
         print(a1.run("0"))
-        a1.concat(a2)
-        print(a1.run("12"))
+        a1.union(a2)
+        print(a1.run("2"))

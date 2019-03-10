@@ -122,7 +122,6 @@ class NFA:
         # note o and -1 are always used for start
         actualState = actualState | self.tf.getTransition(0, -1)
 
-
         # results states after run one symbol
         nextState = set()
 
@@ -134,7 +133,7 @@ class NFA:
                 tempStates = self.tf.getTransition(state, int(symbol))
                 if tempStates is not None:
                     # all new states
-                    nextState =  nextState | tempStates
+                    nextState = nextState | tempStates
 
             # add states for next symbol
             actualState = set() | nextState
@@ -158,9 +157,9 @@ class NFA:
         # function paramet).
 
         # loop through all key values (i = key, j = value)
-        for i,j in self.tf.m.items():
+        for i, j in self.tf.m.items():
             # loop through all key an values in the sub map
-            for i1,j1 in j.items():
+            for i1, j1 in j.items():
                 # we are looking for the maps that have transition to the accepted state of first automata
 
                 if self.acceptState in j1:
@@ -174,80 +173,44 @@ class NFA:
         self.acceptState = automata.acceptState
 
         # we just merge al other transitions
-        self.tf.m = {**self.tf.m , **automata.tf.m}
+        self.tf.m = {**self.tf.m, **automata.tf.m}
 
+    # union
+    def union(self, automata):
+        print("union")
 
+        # remove the initial transition from automata 2
 
+        # the initial state goes to both automatas initial state
+        #  create new initial state  give by NFA.getNextState()
+        #  update automata initial transition, add both initial state and the new state
+        states = automata.tf.m.pop(0).get(-1) | self.tf.m.pop(0).get(-1) | {NFA.getNexState()}
+        self.tf.addTransition(0, -1, states)
 
-# class NFA:
-#
-#
-#
-#     def __init__(self, symbol,startState):
-#
-#         self.stateCount =  startState
-#         self.start = startState
-#         self.tf = TransitionFunctionNFA(self.stateCount)
-#         self.initialState = self.stateCount
-#         self.stateCount += 1
-#         self.actualState = {}
-#
-#         # add transition for symbol
-#         self.tf.addTransition(self.initialState, symbol, {self.stateCount})
-#         self.acceptState = self.stateCount
-#         self.stateCount += 1
-#
-#     def run(self, string):
-#         self.actualState = set()
-#         self.actualState = self.actualState | self.tf.getTransition(0, -1)
-#
-#         self.nextState = set()
-#
-#         for symbol in string:
-#
-#             for state in self.actualState:
-#
-#                 if self.tf.getTransition(state, int(symbol)) is not None:
-#                     self.nextState = self.nextState | self.tf.getTransition(state, int(symbol))
-#
-#                 self.actualState = set() | self.nextState
-#                # print(self.actualState)
-#                 #if len(self.actualState) is 0:
-#                   #  return False
-#
-#             self.nextState.clear()
-#
-#        # print("get here")
-#       #  print(self.actualState)
-#         if self.acceptState in self.actualState:
-#             return True
-#         return False
-#
-#     def andAutomata(self,automata):
-#         print(automata.tf.m)
-#
-#         temp = automata.tf.m.pop(0)
-#         print("pop")
-#         print(temp[0].get(-1))
-#
-#         for x,y in self.tf.m.items():
-#             for j in y:
-#                 for x1,y1 in j.items():
-#                     if self.acceptState in y1:
-#                         self.tf.addTransition(x,x1,{automata.start})
-#                         self.tf.addTransition(x, x1, temp[0].get(-1))
-#                         self.stateCount += 1
-#
-#
-#
-#        # print(automata.acceptState)
-#         self.acceptState = automata.acceptState
-#        # print(self.acceptState)
-#
-#         #merge
-#         self.tf.m = {**self.tf.m , **automata.tf.m}
-#
-#     def orAutomata(self,automata):
-#         print("or")
-#         newStart = self.tf.m#.pop(0)[0].get(-1)
-#         print(newStart)
+        # merge two automatas
+        self.tf.m = {**self.tf.m, **automata.tf.m}
+
+        # create new state for be the accept state
+        newState = NFA.getNexState()
+
+        # all transition that goes to accept state of automata one and two
+        #  now go to the final accepted state
+        # loop through all key values (i = key, j = value)
+        for i, j in self.tf.m.items():
+            # loop through all key an values in the sub map
+            for i1, j1 in j.items():
+                # we are looking for the maps that have transition to the accepted state of first automata
+
+                if self.acceptState in j1:
+                    # all transtion that got to accept state of the first automata
+                    # now goes also to the start state of the second automate
+                    self.tf.addTransition(i, i1, {newState})
+
+                if automata.acceptState in j1:
+                    # all transtion that got to accept state of the first automata
+                    # now goes also to the start state of the second automate
+                    self.tf.addTransition(i, i1, {newState})
+
+        # set accept state to the new
+        self.acceptState = newState
+
