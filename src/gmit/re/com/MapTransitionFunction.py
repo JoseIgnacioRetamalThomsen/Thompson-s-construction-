@@ -146,6 +146,37 @@ class NFA:
             return True
         return False
 
+    # concatenate 2 automatas (and)
+    def concat(self, automata):
+        print("concat")
+
+        # remove the initial transition
+        temp = automata.tf.m.pop(0)
+
+        # any transition that get to initial state of the first automata(this)
+        # should now go  also to the initial state of the second automata(the one on
+        # function paramet).
+
+        # loop through all key values (i = key, j = value)
+        for i,j in self.tf.m.items():
+            # loop through all key an values in the sub map
+            for i1,j1 in j.items():
+                # we are looking for the maps that have transition to the accepted state of first automata
+
+                if self.acceptState in j1:
+                    # all transtion that got to accept state of the first automata
+                    # now goes also to the start state of the second automate
+                    self.tf.addTransition(i, i1, {automata.initialState})
+                    # also, all empty string transition from start state of second automata
+                    self.tf.addTransition(i, i1, temp.get(-1))
+
+        # the second automata accept state become the accept state
+        self.acceptState = automata.acceptState
+
+        # we just merge al other transitions
+        self.tf.m = {**self.tf.m , **automata.tf.m}
+
+
 
 
 # class NFA:
