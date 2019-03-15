@@ -1,5 +1,7 @@
 from src.gmit.re.com import MapTransitionFunction
 from src.gmit.re.com import Shunting
+from src.gmit.re.com import Thomsons
+
 
 class Runner:
     # main method, start of program
@@ -49,3 +51,5 @@ class Runner:
 
         s = Shunting.Converter()
         print(s.toPofix("(a.b)|(c*.d)"))
+
+        print(Thomsons.compile(("(a.b)|(c*.d)")))
