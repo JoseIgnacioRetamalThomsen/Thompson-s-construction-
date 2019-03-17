@@ -35,21 +35,24 @@ class Runner:
         #print(a1.run("1211111122"))
 
         u1 = MapTransitionFunction.NFA(1)
-        u2= MapTransitionFunction.NFA((int)(2))
+        u2= MapTransitionFunction.NFA(1)
         u1.concat(u2)
 
-        print(u1.run("12"))
+        u1.star()
+        print(u1.run("1111111111111"))
 
-        u3 = MapTransitionFunction.NFA((int)(3))
-        u4 = MapTransitionFunction.NFA((int)(4))
+        # u3 = MapTransitionFunction.NFA((int)(3))
+        # u4 = MapTransitionFunction.NFA((int)(4))
+        #
+        # u3.concat(u4)
+        #
+        # u1.union(u3)
+        #
+        # print(u1.run(""))
+        #
+        # s = Shunting.Converter()
+        # print(s.toPofix("(a.b)|(c*.d)"))
+        #
+        # print(Thomsons.compile(("(a.b)|(c*.d)")))
 
-        u3.concat(u4)
-
-        u1.union(u3)
-
-        print(u1.run(""))
-
-        s = Shunting.Converter()
-        print(s.toPofix("(a.b)|(c*.d)"))
-
-        print(Thomsons.compile(("(a.b)|(c*.d)")))
+        print(Thomsons.match("1.2.3*","123"))
