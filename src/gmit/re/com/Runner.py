@@ -1,4 +1,4 @@
-from src.gmit.re.com import MapTransitionFunction
+from src.gmit.re.com import ThomsonsMap
 from src.gmit.re.com import Shunting
 from src.gmit.re.com import Thomsons
 
@@ -8,51 +8,14 @@ class Runner:
     if __name__ == '__main__':
         # print("hello")
         #
-        MapTransitionFunction.NFA.initStateCount(1)
-        #
-        # a1 = MapTransitionFunction.NFA(1)
-        # a2 = MapTransitionFunction.NFA(2)
-        #
-        # # 12
-        # a1.concat(a2)
-        #
-        # a3 = MapTransitionFunction.NFA(1)
-        # a4 = MapTransitionFunction.NFA(2)
-        #  # 1 or 2
-        # a3.union(a4)
-        #
-        # a3.star()
-        # # 12.(1or2)*
-        # a1.concat(a3)
-        #
-        # print(a1.run("1211"))
-        #
-        # a5 = MapTransitionFunction.NFA(2)
-        # a6 = MapTransitionFunction.NFA(2)
-        # a5.concat(a6)
-        # a1.concat(a5)
-        # # 12.(1or2)*.22
-        #print(a1.run("1211111122"))
+        ThomsonsMap.NFA.initStateCount(1)
 
-        u1 = MapTransitionFunction.NFA(1)
-        u2= MapTransitionFunction.NFA(1)
-        u1.concat(u2)
+        string = "(a.b)*.c"
+        sp = Shunting.Converter().toPofix(string)
+        print(sp)
 
-        u1.star()
-        print(u1.run("1111111111111"))
+        nfa = ThomsonsMap.compile(sp)
+        string1 = "ababc"
+        print(nfa.run(string1))
 
-        # u3 = MapTransitionFunction.NFA((int)(3))
-        # u4 = MapTransitionFunction.NFA((int)(4))
-        #
-        # u3.concat(u4)
-        #
-        # u1.union(u3)
-        #
-        # print(u1.run(""))
-        #
-        # s = Shunting.Converter()
-        # print(s.toPofix("(a.b)|(c*.d)"))
-        #
-        # print(Thomsons.compile(("(a.b)|(c*.d)")))
-
-        print(Thomsons.match("1.2.3*","123"))
+        print(Thomsons.match(string, string1))

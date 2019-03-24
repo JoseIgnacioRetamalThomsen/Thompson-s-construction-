@@ -109,12 +109,12 @@ class NFA:
 
         # the transition will go to the accept state
         self.acceptState = NFA.getNexState()
-        self.tf.addTransition(self.initialState, symbol, {self.acceptState})
+        self.tf.addTransition(self.initialState, ord(symbol), {self.acceptState})
 
     # run the automate
     # returnt true if string is accepted false if not
     def run(self, string):
-        print("runnin")
+
         # actual state
         actualState = self.actualState
 
@@ -130,7 +130,7 @@ class NFA:
             # loop througj all acutal states
             for state in actualState:
                 # check for trasition on state  and symbol
-                tempStates = self.tf.getTransition(state, int(symbol))
+                tempStates = self.tf.getTransition(state, ord(symbol))
                 if tempStates is not None:
                     # all new states
                     nextState = nextState | tempStates
@@ -245,3 +245,28 @@ class NFA:
         self.acceptState = newAccept
 
 
+def compile(pofix):
+
+    stack = list();
+    for symbol in pofix:
+        if symbol == '|':
+            print('ds')
+            second = stack.pop()
+            first = stack.pop()
+            first.union(second)
+            stack.append(first)
+
+        elif symbol == '.':
+            second = stack.pop()
+            first = stack.pop()
+            first.concat(second)
+            stack.append(first)
+        elif symbol =='*':
+            stack[-1].star()
+        else:
+            stack.append(NFA(symbol))
+
+    print(len(stack))
+    nfa = stack.pop();
+    nfa.tf.printF()
+    return nfa
