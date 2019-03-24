@@ -240,6 +240,33 @@ class NFA:
         self.initialState = newInitial
         self.acceptState = newAccept
 
+    def plus(self):
+
+
+        # update intial state
+        # create new inital and accepted state
+        newInitial = NFA.getNexState()
+        newAccept = NFA.getNexState()
+        oldInitialTransition = self.tf.getTransition(0, -1)
+        self.tf.addTransition(0, -1, { newInitial})
+
+        # everything that get to old accept state goes to old initial state and new accept state
+        for i, j in self.tf.m.items():
+            # loop through all key an values in the sub map
+            for i1, j1 in j.items():
+                # we are looking for the maps that have transition to the accepted state of first automatn
+
+                if self.acceptState in j1:
+                    # all transtion that got to accept state of the first automata
+                    # now goes also to the start state of the second automate
+                    #  we also need to add all the states that this state goes when move on it, mean oldInitial
+                    self.tf.addTransition(i, i1, {self.initialState, newAccept} | oldInitialTransition)
+
+        # change initial state and accept state
+
+        self.initialState = newInitial
+        self.acceptState = newAccept
+
 
 def compile(pofix):
     stack = list();
@@ -263,6 +290,11 @@ def compile(pofix):
             n = NFA()
             first.union(n)
             stack.append(first)
+        elif symbol =='+':
+            first = stack.pop()
+            first.plus()
+            stack.append(first)
+
         else:
             stack.append(NFA(symbol))
 
