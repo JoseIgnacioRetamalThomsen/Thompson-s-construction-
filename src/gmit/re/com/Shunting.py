@@ -7,7 +7,7 @@ class Converter:
     def toPofix(self,infix):
 
         #
-        specials = {'*':50,'.':40,'|':30}
+        specials = {'*':50,'+':46,'?':43,'.':40,'|':30}
 
         stack = ""
         pofix = ""
