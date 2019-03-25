@@ -21,3 +21,5 @@ class Runner:
         n.plus()
         print(n.run(""))
         n.tf.printF()
+
+        print(Thomsons.match("a+","aaa"))
