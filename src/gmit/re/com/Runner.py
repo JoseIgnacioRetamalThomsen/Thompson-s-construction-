@@ -10,12 +10,14 @@ class Runner:
         #
         ThomsonsMap.NFA.initStateCount(1)
 
-        string = "a*.b?.c.f+"
+        string = "/*.((a-z)|(0-9)|/.)*.@.((a-z)|(0-9))*./..(a-z)+"
         p = Shunting.Converter().toPofix(string)
+        print(p)
         n = ThomsonsMap.compile(p)
-        print(n.run("aaaaaabc"))
+        n.tf.printF()
+        print(n.run("*af5.af@fdaf1a.ie"))
 
-        n = ThomsonsMap.NFA("a")
+        n = ThomsonsMap.NFA("z")
         n.plus()
         print(n.run(""))
         n.tf.printF()

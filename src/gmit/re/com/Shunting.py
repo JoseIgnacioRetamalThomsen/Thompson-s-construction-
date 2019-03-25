@@ -7,7 +7,7 @@ class Converter:
     def toPofix(self,infix):
 
         #
-        specials = {'*':50,'+':46,'?':43,'.':40,'|':30}
+        specials = {'-':60,'*':50,'+':46,'?':43,'.':40,'|':30}
 
         stack = ""
         pofix = ""
@@ -26,6 +26,8 @@ class Converter:
                     # remove from stack?
                     stack = stack[:-1]
                 stack = stack[:-1]
+            elif c == '\\':
+                pofix = pofix +c + "/";
             elif c in specials:
                 # while there is something on the stack
                 # and C (actual) precedence is less or equals of the last special on the stack

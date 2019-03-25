@@ -183,7 +183,8 @@ class NFA:
         # the initial state goes to both automatas initial state
         #  create new initial state  give by NFA.getNextState()
         #  update automaton initial transition, add both initial state and the new state
-        states = automata.tf.m.pop(0).get(-1) | self.tf.m.pop(0).get(-1) | {NFA.getNexState()}
+        #states = automata.tf.m.pop(0).get(-1) | self.tf.m.pop(0).get(-1) | {NFA.getNexState()}
+        states =   automata.tf.m.pop(0).get(-1) | self.tf.m.pop(0).get(-1)
         self.tf.addTransition(0, -1, states)
 
         # merge two automaton
@@ -204,11 +205,15 @@ class NFA:
                     # all transition that got to accept state of the first automata
                     # now goes also to the start state of the second automate
                     self.tf.addTransition(i, i1, {newState})
+                    self.tf.m[i][i1].remove(self.acceptState)
+                    #self.tf.m[i] = {i1:{newState}}
 
-                if automata.acceptState in j1:
+                elif automata.acceptState in j1:
                     # all transition that got to accept state of the first automata
                     # now goes also to the start state of the second automate
                     self.tf.addTransition(i, i1, {newState})
+                    self.tf.m[i][i1].remove(automata.acceptState)
+                    #self.tf.m[i] = {i1: {newState}}
 
         # set accept state to the new
         self.acceptState = newState
@@ -227,7 +232,7 @@ class NFA:
         for i, j in self.tf.m.items():
             # loop through all key an values in the sub map
             for i1, j1 in j.items():
-                # we are looking for the maps that have transition to the accepted state of first automatn
+                # we are looking for the maps that have transition to the accepted state of first automaton
 
                 if self.acceptState in j1:
                     # all transtion that got to accept state of the first automata
@@ -269,34 +274,67 @@ class NFA:
 
 
 def compile(pofix):
+    """Create a NFA from a postfix string.
+        Return the created NFA.
+    """
+
     stack = list();
+
+    isEscape = False;
+
     for symbol in pofix:
-        if symbol == '|':
-            print('ds')
-            second = stack.pop()
-            first = stack.pop()
-            first.union(second)
-            stack.append(first)
-
-        elif symbol == '.':
-            second = stack.pop()
-            first = stack.pop()
-            first.concat(second)
-            stack.append(first)
-        elif symbol == '*':
-            stack[-1].star()
-        elif symbol =='?':
-            first = stack.pop()
-            n = NFA()
-            first.union(n)
-            stack.append(first)
-        elif symbol =='+':
-            first = stack.pop()
-            first.plus()
-            stack.append(first)
-
-        else:
+        # Check for escape character
+        if isEscape:
+            # If is escape, add NFA to stack/
             stack.append(NFA(symbol))
+
+            # For read next character as normal.
+            isEscape = False
+        else:
+            if symbol == '/':
+                    # Escape for next character
+                  isEscape=True
+            elif symbol == '|':
+
+                # Pop first and second character from stack.
+                second = stack.pop()
+                first = stack.pop()
+                # Union second automaton to first.
+                first.union(second)
+                # Push new NFA to stack.
+                stack.append(first)
+
+            elif symbol == '.':
+                second = stack.pop()
+                first = stack.pop()
+                first.concat(second)
+                stack.append(first)
+            elif symbol == '*':
+                stack[-1].star()
+            elif symbol =='?':
+                first = stack.pop()
+                n = NFA()
+                first.union(n)
+                stack.append(first)
+            elif symbol =='+':
+                first = stack.pop()
+                first.plus()
+                stack.append(first)
+            elif symbol =='-':
+                second = stack.pop()
+                first = stack.pop()
+                init = list(first.tf.m.get(first.initialState).keys())[-1]
+               # print(init[-1])
+                last = list(second.tf.m.get(second.initialState).keys())[-1]
+               # print(last[-1])
+                for i in  range(init+1,last +1):
+                    first.union(NFA(chr(i)))
+
+                stack.append(first)
+
+
+            else:
+                stack.append(NFA(symbol))
 
     print(len(stack))
     nfa = stack.pop();
