@@ -295,7 +295,6 @@ def compile(pofix):
                     # Escape for next character
                   isEscape=True
             elif symbol == '|':
-
                 # Pop first and second character from stack.
                 second = stack.pop()
                 first = stack.pop()
@@ -305,38 +304,48 @@ def compile(pofix):
                 stack.append(first)
 
             elif symbol == '.':
+                # Pop from stack
                 second = stack.pop()
                 first = stack.pop()
+                # Concatenate second automaton to first.
                 first.concat(second)
+                # Push new NFA to stack.
                 stack.append(first)
             elif symbol == '*':
+                # Apply star to the top NFA in the stack.
                 stack[-1].star()
-            elif symbol =='?':
+            elif symbol == '?':
+                # Pop top of stack
                 first = stack.pop()
+                # Create a NFA that accept any
                 n = NFA()
+                # Union the first NFA to the any for none or one.
                 first.union(n)
+                # Push to stack
                 stack.append(first)
-            elif symbol =='+':
-                first = stack.pop()
-                first.plus()
-                stack.append(first)
-            elif symbol =='-':
+            elif symbol == '+':
+                # Apply plus to NFA on top of the stack.
+                stack[-1].plus()
+            elif symbol == '-':
+                # Remove top elements from stack
                 second = stack.pop()
                 first = stack.pop()
+                # Get the first character for the range
                 init = list(first.tf.m.get(first.initialState).keys())[-1]
-               # print(init[-1])
+                # Get second charracter for range
                 last = list(second.tf.m.get(second.initialState).keys())[-1]
-               # print(last[-1])
+                # Union of all characters on range
                 for i in  range(init+1,last +1):
                     first.union(NFA(chr(i)))
-
+                # Push new NFA to stack.
                 stack.append(first)
 
 
             else:
+                # Add new NFA to stack, most basic.
                 stack.append(NFA(symbol))
 
-    print(len(stack))
-    nfa = stack.pop();
-    nfa.tf.printF()
-    return nfa
+    # Return the new created NFA
+    # Since we are using Thomson's constructions we are guarantee that
+    # There is only one character left on the stack.
+    return stack.pop()
