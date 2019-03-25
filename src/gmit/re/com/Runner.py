@@ -22,4 +22,4 @@ class Runner:
         print(n.run(""))
         n.tf.printF()
 
-        print(Thomsons.match("a+","aaa"))
+        print(Thomsons.match("g.a?.c*","gacccc"))

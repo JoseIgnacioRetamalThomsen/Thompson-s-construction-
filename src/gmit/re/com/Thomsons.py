@@ -84,6 +84,17 @@ def compile(pofix):
 
             # Push the new NFA to the stac
             nfastack.append(NFA(initial, accept))
+        elif c == "?":
+            # Pop single NFA for stack
+            nfa1 = nfastack.pop()
+            initial = state()
+            accept = state()
+            non = state()
+            initial.edge1 = nfa1.initial
+            initial.edge2 = non
+            nfa1.accept.edge1 = accept
+            non.edge1 = accept
+            nfastack.append(NFA(initial,accept))
 
         else:
             # Create new initial and accept state
