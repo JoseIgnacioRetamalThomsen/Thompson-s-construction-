@@ -22,4 +22,5 @@ class Runner:
         print(n.run(""))
         n.tf.printF()
 
-        print(Thomsons.match("g.a?.c*","gacccc"))
+        print("last")
+        print(Thomsons.match("b-y","z"))
