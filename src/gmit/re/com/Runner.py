@@ -11,11 +11,13 @@ class Runner:
         ThomsonsMap.NFA.initStateCount(1)
 
         string = "/*.((a-z)|(0-9)|/.)*.@.((a-z)|(0-9))*./..(a-z)+"
-        p = Shunting.Converter().toPofix(string)
+        #s1 = "(0|(1.(0.1*(0.0)*.0)*.1)*)*"
+        s1 = "(a-z)*.@.((a-z)|(0-9))*./."
+        p = Shunting.Converter().toPofix(s1)
         print(p)
         n = ThomsonsMap.compile(p)
-        n.tf.printF()
-        print(n.run("*af5.af@fdaf1a.ie"))
+       # n.tf.printF()
+        print(n.run("af@fd4d3a."))
 
         n = ThomsonsMap.NFA("z")
         n.plus()
@@ -23,4 +25,4 @@ class Runner:
         n.tf.printF()
 
         print("last")
-        print(Thomsons.match("b-y","z"))
+        print(Thomsons.match("(a-z)*.@.((a-z)|(0-9))*./.","af@fd4d3a."))

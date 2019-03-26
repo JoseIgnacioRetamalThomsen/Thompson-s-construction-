@@ -219,7 +219,7 @@ class NFA:
         self.acceptState = newState
 
     def star(self):
-        print("star")
+
 
         # update intial state
         # create new inital and accepted state
