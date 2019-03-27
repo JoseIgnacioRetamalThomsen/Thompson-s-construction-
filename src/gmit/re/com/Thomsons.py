@@ -276,3 +276,53 @@ def match(infix, string):
 
     # Check if the accept stare is in the set of current states.
     return (nfa.accept in current)
+
+
+class Runner:
+    """
+    For run several string on the same NFA.
+    """
+
+    # Compiled NFA/
+    nfa = None
+
+    # The current set of states and the next set of states;
+    current = set()
+    next = set()
+
+    def __init__(self, infix):
+        """
+        Create object with a infix regex, compile the nfa with it.
+        :param infix: The infix regex
+        """
+        # Convert infix string into postfix and then compile the NFA.
+        self.nfa = compile(Shunting.Converter().toPofix(infix))
+
+        # Add the initial state to the current set.
+        self.current |= followes(self.nfa.initial)
+
+    def runNext(self, string):
+        """
+        Run a string on the NFA
+        :param string: String to run
+        :return: No return.
+        """
+        # loop through each character in the string.
+        for s in string:
+            # Loop through the current set of states.
+            for c in self.current:
+                # Check if that state is labelled s.
+                if c.label == s:
+                    # Add the edge1 state to the next set.
+                    self.next |= followes(c.edge1)
+            # set current to next, and clear out next.
+            self.current = self.next
+            self.next = set()
+
+    def finish(self):
+        """
+        Finish the run on the automaton
+        :return: True if the string match on the automaton
+        """
+        # Check if any of the current state is accept.
+        return (self.nfa.accept in self.current)
