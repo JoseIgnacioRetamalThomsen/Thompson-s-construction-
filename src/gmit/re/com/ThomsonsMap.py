@@ -1,4 +1,4 @@
-# Thomson's contruction using map(ptython dictionary) and set
+# Thomson's contruction using map(python dictionary) and set
 
 # Jose Retamal
 
@@ -205,21 +205,23 @@ class NFA:
                     # all transition that got to accept state of the first automata
                     # now goes also to the start state of the second automate
                     self.tf.addTransition(i, i1, {newState})
+                    # remove old accept state
                     self.tf.m[i][i1].remove(self.acceptState)
-                    #self.tf.m[i] = {i1:{newState}}
+
 
                 elif automata.acceptState in j1:
                     # all transition that got to accept state of the first automata
                     # now goes also to the start state of the second automate
                     self.tf.addTransition(i, i1, {newState})
+                    # remove old accept state
                     self.tf.m[i][i1].remove(automata.acceptState)
-                    #self.tf.m[i] = {i1: {newState}}
+
 
         # set accept state to the new
         self.acceptState = newState
 
     def star(self):
-
+        """ Kleene star expression, 0 or more."""
 
         # update intial state
         # create new inital and accepted state
@@ -246,8 +248,7 @@ class NFA:
         self.acceptState = newAccept
 
     def plus(self):
-
-
+        """ Perform plus operation on this automaton, mean 1 or more."""
         # update intial state
         # create new inital and accepted state
         newInitial = NFA.getNexState()
@@ -262,13 +263,12 @@ class NFA:
                 # we are looking for the maps that have transition to the accepted state of first automatn
 
                 if self.acceptState in j1:
-                    # all transtion that got to accept state of the first automata
+                    # all transtions that got to accept state of the first automaton
                     # now goes also to the start state of the second automate
                     #  we also need to add all the states that this state goes when move on it, mean oldInitial
                     self.tf.addTransition(i, i1, {self.initialState, newAccept} | oldInitialTransition)
 
         # change initial state and accept state
-
         self.initialState = newInitial
         self.acceptState = newAccept
 
