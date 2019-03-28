@@ -1,6 +1,6 @@
 # Thomson's contruction using map(python dictionary) and set
-
 # Jose Retamal
+# Graph theory project GMIT 2019
 
 # Represent a transition function for a NDA
 # alphabet is represent with positive integers (1,2,3,...)
@@ -8,35 +8,55 @@
 # state are represented as positive integers (1,2,3)
 # -1 represent the state before initial state
 
+
 class TransitionFunctionNFA:
-    """Define a transtion function using map and set."""
+    """
+    Define a transtion function using map and set.
+    """
 
-    # constructor
     def __init__(self, initial_state):
-        """Create transition function with the parameterized initial state."""
+        """
+        Create transition function with the parameterized initial state.
+        :param initial_state: The initial state
+        """
 
-        # map that define the transitions
-        self.m = {0: {-1: {initial_state}}}  # send to initial state
+        # Create the map that define the transitions
+        # Always (0,-1) will be used for start running the automaton
+        # {actualState : { symbol : {nextStates}}
+        self.m = {0: {-1: {initial_state}}}
 
-    # prints the transitions
     def printF(self):
+        """
+        Prints the transitions.
+        :return: Nothing.
+        """
         print(self.m)
 
+
     def getTransition(self, state, symbol):
-        """ Return set of next states from actual state and symbol."""
+        """
+        Return set of next states from actual state and symbol.
+        :param state: Actual state.
+        :param symbol: Symbol of the alphabet.
+        :return: Set of states from state with symbol, None if no states.
+        """
 
         # check state in map
         if self.m.get(state) is not None:
             x = self.m.get(state)
-
             # check symbol in
             if x.get(symbol) is not None:
                 # return the state after if it is
                 return x.get(symbol)
 
     def addTransition(self, state, symbol, results={}):
-        """Add new transition to map."""
-
+        """
+        Add new transition to map.
+        :param state: Actual state.
+        :param symbol: Symbol for transition.
+        :param results: Set of states to add for the transition.
+        :return: Nothing.
+        """
         # check if state is in map
         x = self.m.get(state)
         if x is not None:
@@ -53,50 +73,62 @@ class TransitionFunctionNFA:
 
 
 class NFA:
-    """ Define a Nondeterministic finite automaton using the transition function and a accept state.
-        state count must be initialized using initStateCount() function.
+    """
+    Define a Nondeterministic finite automaton using the transition function and a accept state.
+    state count must be initialized using initStateCount() function.
     """
     # class variable, keep count of states.
     stateCount = int
 
     @staticmethod
     def initStateCount(init):
-        """Initialize state count."""
+        """
+        Start the count
+        :param init: first state on count.
+        :return: Nothing.
+        """
         NFA.stateCount = init
 
     @staticmethod
     def getNexState():
-        """Gives next state. """
+        """
+        Give new state.
+        :return: The next state.
+        """
+        # Increase count.
         NFA.stateCount += 1
+        # Return new state number.
         return NFA.stateCount
 
-
-
-
     def __init__(self, symbol = None):
-        """ Create the  most basic NFA, that accept the symbol on the parameter.
-            Symbol must be a character, it will be then convert to the corresponding number.
         """
+        Create the  most basic NFA, that accept the symbol on the parameter.
+        Symbol must be a character, it will be then convert to the corresponding number.
+        :param symbol: Symbol that accept this automaton, if this parameter is black ir None will create a
+        NFA that accept zero occurrences.
+        """
+        # Create NFA that accept zero occurrences
         if symbol is None:
-            # self.stateCount = initialState
+
+            # Get next state
             self.stateCount = NFA.getNexState()
 
-            # the map of transitions
+            # Create transition function map
             self.tf = TransitionFunctionNFA(self.stateCount)
+            # set accept state
             self.acceptState = self.stateCount
 
             # actual set of states
             self.actualState = set()
 
         else:
-            # all different states
-            # self.stateCount = initialState
+            # Get next state.
             self.stateCount = NFA.getNexState()
 
-            # the map of transitions
+            # Create transition function map
             self.tf = TransitionFunctionNFA(self.stateCount)
 
-            # the initial state
+            # Set initial state
             self.initialState = self.stateCount
 
             # actual set of states
@@ -108,11 +140,13 @@ class NFA:
             # the transition will go to the accept state
             self.tf.addTransition(self.initialState, ord(symbol), {self.acceptState})
 
-    #
-    # return true if string is accepted false if not
+
     def run(self, string):
-        """ Run the automaton.
-            Return true if string is accepted false if not.
+        """
+        Run the automaton.
+        Return true if string is accepted false if not
+        :param string: String for run on this NFA
+        :return: true if the string is accept.
         """
 
         # actual state
