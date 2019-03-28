@@ -326,3 +326,52 @@ class Runner:
         """
         # Check if any of the current state is accept.
         return (self.nfa.accept in self.current)
+
+class RunChar:
+    """
+       For run one character at a time on a automaton.
+    """
+
+    # Compiled NFA/
+    nfa = None
+
+    # The current set of states and the next set of states;
+    current = set()
+    next = set()
+
+    def __init__(self, infix):
+        """
+        Create object with a infix regex, compile the nfa with it.
+        :param infix: The infix regex
+        """
+        # Convert infix string into postfix and then compile the NFA.
+        self.nfa = compile(Shunting.Converter().toPofix(infix))
+
+        # Add the initial state to the current set.
+        self.current |= followes(self.nfa.initial)
+
+    def run(self, symbol):
+        """
+        Run one symbon on automaton
+        :param symbol: symbol to run on automaton
+        :return: true if there are states from transition
+        """
+        for c in self.current:
+            # Check if that state is labelled s.
+            if c.label == symbol:
+                # Add the edge1 state to the next set.
+                self.next |= followes(c.edge1)
+            # set current to next, and clear out next.
+        self.current = self.next
+        self.next = set()
+
+        return (len(self.current) != 0)
+
+    def check(self):
+        """
+        Finish the run on the automaton
+        :return: True if the string match on the automaton
+        """
+
+        # Check if any of the current state is accept.
+        return (self.nfa.accept in self.current)

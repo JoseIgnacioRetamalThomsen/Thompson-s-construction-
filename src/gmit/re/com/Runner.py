@@ -13,12 +13,12 @@ class Runner:
         ThomsonsMap.NFA.initStateCount(1)
 
         # word that finish with s
-        runc = ThomsonsMap.RunChar("((a-z)|(A-Z)).((a-z)|\')*.s.(/.| |/?|!|\"|\')");
-
+        #runc = ThomsonsMap.RunChar("((a-z)|(A-Z)).((a-z)|\')*.s.(/.| |/?|!|\"|\')");
+        runc = Thomsons.RunChar("((a-z)|(A-Z)).((a-z)|\')*.s.(/.| |/?|!|\"|\')");
         print(runc.run('a'))
         print(runc.run('\''))
+        print(runc.run('s'))
         print(runc.run(' '))
-        print(runc.run('a'))
         print(runc.check())
 
 
