@@ -12,34 +12,13 @@ class Runner:
 
         ThomsonsMap.NFA.initStateCount(1)
 
-        #a?nan
-        #a?^n.a^n a^n a?.a?.a?.a.a.a a.a.a
-        string = "/*.((a-z)|(0-9)|/.)*.@.((a-z)|(0-9))*./..(a-z)+"
-        #s1 = "(0|(1.(0.1*(0.0)*.0)*.1)*)*"
-        s1 = "(a-z)"
-       # s1 = "a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a"
-        p = Shunting.Converter().toPofix(s1)
-        print(p)
-        n = ThomsonsMap.compile(p)
-        n.tf.printF()
-        print(n.run("z"))
+        # word that finish with s
+        runc = ThomsonsMap.RunChar("((a-z)|(A-Z)).((a-z)|\')*.s.(/.| |/?|!|\"|\')");
 
-        n = ThomsonsMap.NFA("z")
-        n.plus()
-        print(n.run(""))
-        n.tf.printF()
+        print(runc.run('a'))
+        print(runc.run('\''))
+        print(runc.run(' '))
+        print(runc.run('a'))
+        print(runc.check())
 
-        print("last")
-        print(Thomsons.match("a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a?.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"))
-        print(Thomsons.match("a?", "aa"))
 
-        run = Thomsons.Runner("(a-z)*")
-        run.runNext("aaaaaa")
-
-        print(run.finish())
-
-        run1 = ThomsonsMap.Runner("(a-z)*")
-
-        run1.runNext("aaaa")
-        run1.runNext("adaffasf")
-        print(run1.finish())

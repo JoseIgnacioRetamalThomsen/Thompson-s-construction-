@@ -452,3 +452,62 @@ class Runner:
 
         # check if any of the last state is accepted
         return(self.nfa.acceptState in self.actualState)
+
+
+class RunChar:
+    """
+    For run one character at a time on a automaton.
+    """
+    # Compiled NFA/
+    nfa = None
+
+    # actual state
+    actualState = set()
+
+    # results states after run one symbol
+    nextState = set()
+
+    previus = set()
+    def __init__(self, infix):
+        """
+        Create object with a infix regex, compile the nfa with it.
+        :param infix: The infix regex
+        """
+        # Convert infix string into postfix and then compile the NFA.
+        self.nfa = compile(Shunting.Converter().toPofix(infix))
+
+        # add initial state
+        self.actualState |= self.nfa.tf.getTransition(0, -1)
+
+
+    def run(self,symbol):
+        """
+        Run one symbon on automaton
+        :param symbol: symbol to run on automaton
+        :return: true if there are states from transition
+        """
+        # loop througj all acutal states
+        for state in self.actualState:
+            # check for trasition on state  and symbol
+            tempStates = self.nfa.tf.getTransition(state, ord(symbol))
+            if tempStates is not None:
+                # all new states
+                self.nextState |= tempStates
+
+        # add states for next symbol, replace actual state by next state set
+        self.actualState = set() | self.nextState
+        print(self.actualState)
+        # clear
+        self.nextState.clear()
+
+        return (len(self.actualState)!=0)
+
+
+    def check(self):
+        """
+        Finish the run on the automaton
+        :return: True if the string match on the automaton
+        """
+
+        # check if any of the last state is accepted
+        return(self.nfa.acceptState in self.actualState)
