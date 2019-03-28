@@ -7,8 +7,8 @@
 # https://web.microsoftstream.com/video/946a7826-e536-4295-b050-857975162e6c
 # https://web.microsoftstream.com/video/5e2a482a-b1c9-48a3-b183-19eb8362abc9
 
-from src.gmit.re.com import Shunting
-
+#from src.gmit.re.com import Shunting
+import Shunting
 
 # Represent a state with two arrosws labelled by label
 # use None for label representing "e" arrows

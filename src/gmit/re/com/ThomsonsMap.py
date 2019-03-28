@@ -11,7 +11,7 @@
 
 class TransitionFunctionNFA:
     """
-    Define a transtion function using map and set.
+    Define a transition function using map and set.
     """
 
     def __init__(self, initial_state):
@@ -179,9 +179,13 @@ class NFA:
             return True
         return False
 
-    # concatenate 2 automatas (and)
     def concat(self, automata):
-        """Concatenate this automata to the one on the parameter."""
+        """
+        Concatenate 2 automatas, this and the parameter.
+        :param automata: Automaton to concadenate to this.
+        :return: Nothing.
+        """
+
 
         # remove the initial transition
         temp = automata.tf.m.pop(0)
@@ -196,9 +200,11 @@ class NFA:
             for i1, j1 in j.items():
                 # we are looking for the maps that have transition to the accepted state of first automaton
                 if self.acceptState in j1:
-                    # all transition that got to accept state of the first automata
-                    # now goes also to the start state of the second automate
+                    # all transition that got to accept state of the first automaton.
+                    # now goes also to the start state of the second automaton.
                     self.tf.addTransition(i, i1, {automata.initialState})
+                    # we can remove accept state for performance
+                    self.tf.m[i][i1].remove(self.acceptState)
                     # also, all empty string transition from start state of second automaton
                     self.tf.addTransition(i, i1, temp.get(-1))
 
@@ -208,27 +214,25 @@ class NFA:
         # we just merge al other transitions
         self.tf.m = {**self.tf.m, **automata.tf.m}
 
-    # union
-    def union(self, automata):
-        """ Union of this automaton to the parameter one."""
+    def union(self, automaton):
+        """
+        Union of this automaton parameter automaton
+        :param automaton: The automaton for perform union operation.
+        :return: Nothing.
+        """
 
-        # remove the initial transition from automaton 2
-
-        # the initial state goes to both automatas initial state
-        #  create new initial state  give by NFA.getNextState()
-        #  update automaton initial transition, add both initial state and the new state
-        #states = automata.tf.m.pop(0).get(-1) | self.tf.m.pop(0).get(-1) | {NFA.getNexState()}
-        states =   automata.tf.m.pop(0).get(-1) | self.tf.m.pop(0).get(-1)
+        # Join to initial states
+        states = automaton.tf.m.pop(0).get(-1) | self.tf.m.pop(0).get(-1)
         self.tf.addTransition(0, -1, states)
 
-        # merge two automaton
-        self.tf.m = {**self.tf.m, **automata.tf.m}
+        # merge automatons
+        self.tf.m = {**self.tf.m, **automaton.tf.m}
 
-        # create new state for be the accept state
+        # create new state for new accept state
         newState = NFA.getNexState()
 
         # all transition that goes to accept state of automaton one and two
-        #  now go to the final accepted state
+        #  now go to the new  accepted state
         # loop through all key values (i = key, j = value)
         for i, j in self.tf.m.items():
             # loop through all key an values in the sub map
@@ -236,26 +240,29 @@ class NFA:
                 # we are looking for the maps that have transition to the accepted state of first automata
 
                 if self.acceptState in j1:
-                    # all transition that got to accept state of the first automata
+                    # all transition that got to accept state of the first automaton
                     # now goes also to the start state of the second automate
                     self.tf.addTransition(i, i1, {newState})
                     # remove old accept state
                     self.tf.m[i][i1].remove(self.acceptState)
 
 
-                elif automata.acceptState in j1:
+                elif automaton.acceptState in j1:
                     # all transition that got to accept state of the first automata
                     # now goes also to the start state of the second automate
                     self.tf.addTransition(i, i1, {newState})
                     # remove old accept state
-                    self.tf.m[i][i1].remove(automata.acceptState)
+                    self.tf.m[i][i1].remove(automaton.acceptState)
 
 
         # set accept state to the new
         self.acceptState = newState
 
     def star(self):
-        """ Kleene star expression, 0 or more."""
+        """
+        Kleene star expression, 0 or more.
+        :return: Nothing.
+        """
 
         # update intial state
         # create new inital and accepted state
@@ -277,12 +284,15 @@ class NFA:
                     self.tf.addTransition(i, i1, {self.initialState, newAccept} | oldInitialTransition)
 
         # change initial state and accept state
-
         self.initialState = newInitial
         self.acceptState = newAccept
 
     def plus(self):
-        """ Perform plus operation on this automaton, mean 1 or more."""
+        """
+        Perform plus operation on this automaton, mean 1 or more.
+        :return: Nothing.
+        """
+
         # update intial state
         # create new inital and accepted state
         newInitial = NFA.getNexState()
@@ -308,8 +318,11 @@ class NFA:
 
 
 def compile(pofix):
-    """Create a NFA from a postfix string.
-        Return the created NFA.
+    """
+    Create a NFA from a postfix string.
+    Return the created NFA.
+    :param pofix: Pofix reger for create automaton.
+    :return: Compiled NFA.
     """
 
     stack = list();
