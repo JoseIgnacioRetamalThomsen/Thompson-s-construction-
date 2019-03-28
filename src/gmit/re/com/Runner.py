@@ -37,3 +37,9 @@ class Runner:
         run.runNext("aaaaaa")
 
         print(run.finish())
+
+        run1 = ThomsonsMap.Runner("(a-z)*")
+
+        run1.runNext("aaaa")
+        run1.runNext("adaffasf")
+        print(run1.finish())

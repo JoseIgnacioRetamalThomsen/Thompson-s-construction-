@@ -8,6 +8,7 @@
 # state are represented as positive integers (1,2,3)
 # -1 represent the state before initial state
 
+import Shunting
 
 class TransitionFunctionNFA:
     """
@@ -396,3 +397,58 @@ def compile(pofix):
     # Since we are using Thomson's constructions we are guarantee that
     # There is only one character left on the stack.
     return stack.pop()
+
+class Runner:
+    """
+    For run several stings on one automaton.
+    """
+
+    # Compiled NFA/
+    nfa = None
+
+    # actual state
+    actualState = set()
+
+    # results states after run one symbol
+    nextState = set()
+
+    def __init__(self, infix):
+        """
+        Create object with a infix regex, compile the nfa with it.
+        :param infix: The infix regex
+        """
+        # Convert infix string into postfix and then compile the NFA.
+        self.nfa = compile(Shunting.Converter().toPofix(infix))
+
+        # add initial state
+        self.actualState |= self.nfa.tf.getTransition(0, -1)
+
+    def runNext(self, string):
+        """
+        Run a string on the NFA
+        :param string: String to run
+        :return: No return.
+        """
+        # loop through each character in the string
+        for symbol in string:
+            # loop througj all acutal states
+            for state in self.actualState:
+                # check for trasition on state  and symbol
+                tempStates = self.nfa.tf.getTransition(state, ord(symbol))
+                if tempStates is not None:
+                    # all new states
+                    self.nextState |= tempStates
+
+            # add states for next symbol
+            self.actualState = set() | self.nextState
+            # clear
+            self.nextState.clear()
+
+    def finish(self):
+        """
+        Finish the run on the automaton
+        :return: True if the string match on the automaton
+        """
+
+        # check if any of the last state is accepted
+        return(self.nfa.acceptState in self.actualState)
