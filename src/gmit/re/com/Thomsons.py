@@ -375,3 +375,10 @@ class RunChar:
 
         # Check if any of the current state is accept.
         return (self.nfa.accept in self.current)
+
+    def clear(self):
+        current = set()
+        next = set()
+
+        # Add the initial state to the current set.
+        self.current |= followes(self.nfa.initial)

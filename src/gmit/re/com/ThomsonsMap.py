@@ -10,6 +10,7 @@
 
 import Shunting
 
+
 class TransitionFunctionNFA:
     """
     Define a transition function using map and set.
@@ -326,6 +327,9 @@ def compile(pofix):
     :return: Compiled NFA.
     """
 
+    # init state count
+    NFA.initStateCount(1)
+
     stack = list();
 
     isEscape = False;
@@ -496,7 +500,7 @@ class RunChar:
 
         # add states for next symbol, replace actual state by next state set
         self.actualState = set() | self.nextState
-        print(self.actualState)
+
         # clear
         self.nextState.clear()
 
@@ -511,3 +515,12 @@ class RunChar:
 
         # check if any of the last state is accepted
         return(self.nfa.acceptState in self.actualState)
+
+    def clear(self):
+        # actual state
+        actualState = set()
+
+        # results states after run one symbol
+        nextState = set()
+        # add initial state
+        self.actualState |= self.nfa.tf.getTransition(0, -1)
