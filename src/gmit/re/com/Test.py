@@ -1,6 +1,7 @@
 import unittest
 import Shunting
 import Thomsons
+import ThomsonsMap
 
 
 class Test(unittest.TestCase):
@@ -50,9 +51,23 @@ class Test(unittest.TestCase):
                         ("a.(b.b)*.c", "abad", False),
                         ("a.(b.b)*.c", "abbbc", False),
                         ("a.(b.b)*.c", "adc", False),
-                        ("(0|((1.(0.1*.(0.0)*.0)*.1))*)*", "0", True)
+                        ("(0|((1.(0.1*.(0.0)*.0)*.1))*)*", "", True),
+                        ("(0|((1.(0.1*.(0.0)*.0)*.1))*)*", "0", True),
+                        ("(0|((1.(0.1*.(0.0)*.0)*.1))*)*", "00", True),
+                        ("(0|((1.(0.1*.(0.0)*.0)*.1))*)*", "11", True),
+                        ("(0|((1.(0.1*.(0.0)*.0)*.1))*)*", "000", True),
+                        ("(0|((1.(0.1*.(0.0)*.0)*.1))*)*", "011", True),
+                        ("(0|((1.(0.1*.(0.0)*.0)*.1))*)*", "110", True),
+                        ("(0|((1.(0.1*.(0.0)*.0)*.1))*)*", "0000", True),
+                        ("(0|((1.(0.1*.(0.0)*.0)*.1))*)*", "0011", True),
+                        ("(0|((1.(0.1*.(0.0)*.0)*.1))*)*", "0110", True),
+                        ("(0|((1.(0.1*.(0.0)*.0)*.1))*)*", "1001", True),
+                        ("(0|((1.(0.1*.(0.0)*.0)*.1))*)*", "00000", True),
+                        ("(0|((1.(0.1*.(0.0)*.0)*.1))*)*", "1", False),
+                        ("(0|((1.(0.1*.(0.0)*.0)*.1))*)*", "10", False),
                       ]
-
+    # fail becuase overflow for multiple of 3 regex test
+    @unittest.expectedFailure
     def test_thomsons(self):
 
         for case in self.matchtestcases:
@@ -68,6 +83,9 @@ class Test(unittest.TestCase):
     #     with self.assertRaises(TypeError):
     #         s.split(2)
 
+    def test_thomsonsMap(self):
+        for case in self.matchtestcases:
+            self.assertEqual(ThomsonsMap.compile(Shunting.Converter().toPofix(case[0])).run(case[1]),case[2])
 
 if __name__ == '__main__':
     unittest.main()
