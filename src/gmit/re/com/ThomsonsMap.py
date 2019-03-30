@@ -10,7 +10,6 @@
 
 import Shunting
 
-
 class TransitionFunctionNFA:
     """
     Define a transition function using map and set.
@@ -33,7 +32,6 @@ class TransitionFunctionNFA:
         :return: Nothing.
         """
         print(self.m)
-
 
     def getTransition(self, state, symbol):
         """
@@ -102,7 +100,7 @@ class NFA:
         # Return new state number.
         return NFA.stateCount
 
-    def __init__(self, symbol = None):
+    def __init__(self, symbol=None):
         """
         Create the  most basic NFA, that accept the symbol on the parameter.
         Symbol must be a character, it will be then convert to the corresponding number.
@@ -141,7 +139,6 @@ class NFA:
             self.acceptState = NFA.getNexState()
             # the transition will go to the accept state
             self.tf.addTransition(self.initialState, ord(symbol), {self.acceptState})
-
 
     def run(self, string):
         """
@@ -187,7 +184,6 @@ class NFA:
         :param automata: Automaton to concadenate to this.
         :return: Nothing.
         """
-
 
         # remove the initial transition
         temp = automata.tf.m.pop(0)
@@ -256,7 +252,6 @@ class NFA:
                     # remove old accept state
                     self.tf.m[i][i1].remove(automaton.acceptState)
 
-
         # set accept state to the new
         self.acceptState = newState
 
@@ -300,7 +295,7 @@ class NFA:
         newInitial = NFA.getNexState()
         newAccept = NFA.getNexState()
         oldInitialTransition = self.tf.getTransition(0, -1)
-        self.tf.addTransition(0, -1, { newInitial})
+        self.tf.addTransition(0, -1, {newInitial})
 
         # everything that get to old accept state goes to old initial state and new accept state
         for i, j in self.tf.m.items():
@@ -344,8 +339,8 @@ def compile(pofix):
             isEscape = False
         else:
             if symbol == '/':
-                    # Escape for next character
-                  isEscape=True
+                # Escape for next character
+                isEscape = True
             elif symbol == '|':
                 # Pop first and second character from stack.
                 second = stack.pop()
@@ -387,7 +382,7 @@ def compile(pofix):
                 # Get second charracter for range
                 last = list(second.tf.m.get(second.initialState).keys())[-1]
                 # Union of all characters on range
-                for i in  range(init+1,last +1):
+                for i in range(init + 1, last + 1):
                     first.union(NFA(chr(i)))
                 # Push new NFA to stack.
                 stack.append(first)
@@ -401,6 +396,7 @@ def compile(pofix):
     # Since we are using Thomson's constructions we are guarantee that
     # There is only one character left on the stack.
     return stack.pop()
+
 
 class Runner:
     """
@@ -455,7 +451,7 @@ class Runner:
         """
 
         # check if any of the last state is accepted
-        return(self.nfa.acceptState in self.actualState)
+        return (self.nfa.acceptState in self.actualState)
 
 
 class RunChar:
@@ -472,6 +468,7 @@ class RunChar:
     nextState = set()
 
     previus = set()
+
     def __init__(self, infix):
         """
         Create object with a infix regex, compile the nfa with it.
@@ -483,8 +480,7 @@ class RunChar:
         # add initial state
         self.actualState |= self.nfa.tf.getTransition(0, -1)
 
-
-    def run(self,symbol):
+    def run(self, symbol):
         """
         Run one symbon on automaton
         :param symbol: symbol to run on automaton
@@ -504,8 +500,7 @@ class RunChar:
         # clear
         self.nextState.clear()
 
-        return (len(self.actualState)!=0)
-
+        return (len(self.actualState) != 0)
 
     def check(self):
         """
@@ -514,7 +509,7 @@ class RunChar:
         """
 
         # check if any of the last state is accepted
-        return(self.nfa.acceptState in self.actualState)
+        return (self.nfa.acceptState in self.actualState)
 
     def clear(self):
         # actual state

@@ -11,7 +11,22 @@ class Runner:
         print("hello")
 
         ThomsonsMap.NFA.initStateCount(1)
+        # a/..b.
+        print(Shunting.Converter().toPofix("a./.b"))
 
+       # print(Thomsons.match("((a-z)|(A-Z)|(0-9)).((a-z)|(A-Z)|(0-9)|_|/.)*.@.((a-z)|(A-Z)|/.)*./..(((a-z)|(A-Z)).((a-z)|(A-Z)).((a-z)|(A-Z))|((a-z)|(A-Z)).((a-z)|(A-Z)))","my.g7@gmail.com.ar"))
+
+        print(Shunting.Converter().toPofix("a*.c"))
+        nfa = ThomsonsMap.compile(Shunting.Converter().toPofix("(a*.c*)*"))
+        print(Thomsons.match("(a*.c*)*","aaacaacac"))
+        print(Shunting.Converter().toPofix("a*.c"))
+        print("next")
+        print(nfa.run("aaacaaacac"))
+
+        run = run = Thomsons.Runner("((a-z)|(A-Z)| |,)*")
+        run.runNext("Yoyour veivesm earea sontosmile,")
+        run.runNext("Yoyour veivesm earea sontosmile,")
+        print(run.finish())
         # word that finish with s
         #runc = ThomsonsMap.RunChar("((a-z)|(A-Z)).((a-z)|\')*.s.(/.| |/?|!|\"|\')");
         runc = ThomsonsMap.RunChar("((a-z)|(A-Z)).((a-z)|\')*.s.(/.| |/?|!|\"|\')");
