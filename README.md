@@ -3,7 +3,83 @@
   
      python src/gmit/re/com/app.py
 
+# How to use 
 
+
+* Concatenation : . 
+
+ a followed by a b
+
+      a.b
+
+* Union : |
+
+a or b
+
+
+      a|b
+* Kleene start , zero or many : *
+
+ Zero or many a
+
+
+
+      a*
+* One or many :  +
+
+ One or many a
+
+       a+
+
+* Zero or one : ?
+
+ Zero or one a
+
+       a?
+
+* Range: -
+
+ All lower case letter on English alphabet:
+
+    (a-z)
+
+
+* Escape : /
+
+
+ a followed by a dot.
+
+     a./.
+
+### Examples 
+
+*  Any English letter lower or upper case:
+
+        ((a-z)|(A-Z))
+*  The word hello followed by a question mark, followed by a space, with one or many number at the end
+      
+         h.e.l.l.o./?. .(0-9)+
+
+## Features
+
+### Single string match
+ 
+ Run a regex against a single string. 
+
+### Single string match from file
+
+  Run regex against a single string from a file. Can be use for run regex against long string.
+
+### Search on file
+
+  Search occurrences of regex on a string from a file. 
+* Match the smallest string that is accepted by the regex.
+* If show output is selected shows the line, start and end of the string that is accepted.
+
+### Match on file line by line
+
+  Run regex against each line of the file, every line is run as a different string.
+  
 
 # Introduction
 
@@ -235,5 +311,265 @@ General rules :
 For the range I just did multiple union. 
 
 
+# Thomson's using nodes
 
-Please check the wiki https://github.com/JoseIgnacioRetamalThomsen/graph-theory-project.wiki.git
+This is the method's that have been show in the video class. It implement Thomson's construction using nodes and connecting them by to edges.
+
+A state is represented by a node as:
+ 
+      class state:
+            label = None
+            edge1 = None
+            edge2 = None
+
+![state](https://github.com/JoseIgnacioRetamalThomsen/graph-theory-project/blob/master/imgs/thomson_state.png)
+
+A NFA will be define with a initial and a accept state:
+
+      class NFA:
+            state initial = None
+            state accept = None
+### Rules :
+* When the label of a state is None, any edge connected will be a ε transition.
+* When the label is assigned the edge will be the transition for the symbol on the label. This works because Thomson's construction warranty that we will have only one transition from a labeled state.
+
+
+### Symbol a:
+
+  The basic automaton that accept only the symbol 'a' will looks like:
+
+![a](https://github.com/JoseIgnacioRetamalThomsen/graph-theory-project/blob/master/imgs/thomson_a.png)
+
+  Rules followed for create the automaton:
+* Create 2 states initial and accept
+* Set label of initial state to 'a'
+* Connect edge1 of initial state to accept state
+
+
+
+### a.b 
+
+* Connect edge1 of accept state of a to initial state of b
+* a initial state is the new initial state.
+* b accept state is new accept state
+
+![a.b](https://github.com/JoseIgnacioRetamalThomsen/graph-theory-project/blob/master/imgs/thomson_acb.png)
+
+
+### a or b 
+
+* Create a new accept and initial state.
+* Connected edge1 of new accept state to a initial state.
+* Connected edge2 of new accept state to b initial state.
+* Connect a accept state to new accept state.
+* Connect b accept state to new accept state.
+
+![a U b](https://github.com/JoseIgnacioRetamalThomsen/graph-theory-project/blob/master/imgs/thomson_aob.png)
+
+
+### a*
+
+* Create new initial and accept state
+* Connect new initial to a initial and new accept states.
+* connect a accept to a state and new initial
+
+![Kleene star](https://github.com/JoseIgnacioRetamalThomsen/graph-theory-project/blob/master/imgs/thomson_k.png)
+
+
+### a+
+ 
+ Same than a* but we just don't connect new initial state to new accept state:
+
+![One or many](https://github.com/JoseIgnacioRetamalThomsen/graph-theory-project/blob/master/imgs/thomson_q.png)
+
+### a?(One or zero)
+
+* Create new initial and accept state.
+* Create a new empty state.
+* Connect new initial to a initial and to the new empty state.
+* Connect a accept state to new accept state.
+* Connect new empty label to new accept state.
+
+![?](https://github.com/JoseIgnacioRetamalThomsen/graph-theory-project/blob/master/imgs/thomson_qm.png)
+
+# Shunting Yard Algorithm
+
+ We will useShunting Yard algorithm for convert infix expressions(most common way of writing mathematical expressions, ex: a+b) into post fix expressions (a+b in post fix is ab+). With the expression in post fix notation it would be possible to create the NFA using Thomson's construction.
+It use a stack for operators and the following rules [1]:
+
+1. If the incoming symbols is an operand, print it..
+
+2. If the incoming symbol is a left parenthesis, push it on the stack.
+
+3. If the incoming symbol is a right parenthesis: discard the right parenthesis, pop and print the stack symbols until you see a left parenthesis. Pop the left parenthesis and discard it.
+
+4. If the incoming symbol is an operator and the stack is empty or contains a left parenthesis on top, push the incoming operator onto the stack.
+
+5. If the incoming symbol is an operator and has either higher precedence than the operator on the top of the stack, 
+or has the same precedence as the operator on the top of the stack and is right associative -- push it on the stack.
+
+6. If the incoming symbol is an operator and has either lower precedence than the operator on the top of the stack, or has the same precedence as the operator on the top of the stack and is left associative -- continue to pop the stack until this is not true. Then, push the incoming operator.
+
+7. At the end of the expression, pop and print all operators on the stack. (No parentheses should remain.)
+ 
+
+***
+[Shunting Yard Algorithm](http://www.oxfordmathcenter.com/drupal7/node/628)
+
+
+# Testing and comparing algorithms
+
+## Odd number of 1 regex
+
+ Test regex again string of 0 and 1 of different length.
+
+     0*.1.0*.(0*.1.0*.1.0*)* 
+    
+ [regex from this website.](https://t4tutorials.com/regular-expression-for-the-language-of-an-odd-number-of-1s/#RE_01001010)
+
+   The regex was run against files with string of 0 and 1, each line contains 1000 characters (0 or 1), starting with 10 lines and doubling the size each time.
+
+The time in seconds for each algorithm is in the table below:
+
+![table](https://github.com/JoseIgnacioRetamalThomsen/graph-theory-project/blob/master/imgs/odd_table.png)
+
+Graph Size/ seconds:
+
+![Normal](https://github.com/JoseIgnacioRetamalThomsen/graph-theory-project/blob/master/imgs/odd_graph_normal.png)
+
+
+Log scale graph
+
+![Log](https://github.com/JoseIgnacioRetamalThomsen/graph-theory-project/blob/master/imgs/odd_graph_log.png)
+
+### Conclusion
+
+We can see that bot algorithms escalate linearly in relation to the size of the string.  
+
+## Email validation regex
+
+On this test the regex was use to validate email string, the regex was compiled and then run it against the strings(only compiled once for each test). This test don't really show's how the alorithm's grows because they are test against strings of the (more or less) same size. But still contrast the 2 algorithms.
+
+      ((a-z)|(A-Z)|(0-9)).((a-z)|(A-Z)|(0-9)|_|/.|/-|/+)*.((a-z)|(A-Z)|(0-9)).@.((a-z)|(A-Z)|(0-9)).((a-z)|(A-Z)|(0-9)|/.)*./..(((a-z)|(A-Z)).((a-z)|(A-Z)).((a-z)|(A-Z))|((a-z)|(A-Z)).((a-z)|(A-Z)))
+
+
+* start with letter or number: 
+
+      ((a-z)|(A-Z)|(0-9))
+* followed by zero or more any letter number or _.-+ special character : 
+
+      ((a-z)|(A-Z)|(0-9)|_|/.|/-|/+)*
+* followed by a letter or a number :  
+
+       ((a-z)|(A-Z)|(0-9))
+* followed by @: 
+ 
+       @
+* followed by a  letter or number after the @ : 
+
+
+       ((a-z)|(A-Z)|(0-9))
+* followed by zero or more letter, number or . : 
+
+
+       ((a-z)|(A-Z)|(0-9)|/.)*
+* end with a dot followed by 2 or 3 letter : 
+
+
+       /..(((a-z)|(A-Z)).((a-z)|(A-Z)).((a-z)|(A-Z))|((a-z)|(A-Z)).((a-z)|(A-Z)))
+
+
+
+![Email table](https://github.com/JoseIgnacioRetamalThomsen/graph-theory-project/blob/master/imgs/email_table.png)
+
+![Email normal](https://github.com/JoseIgnacioRetamalThomsen/graph-theory-project/blob/master/imgs/odd_graph_normal.png)
+
+![email log](https://github.com/JoseIgnacioRetamalThomsen/graph-theory-project/blob/master/imgs/email_log.png)
+
+
+# Search for words finishing on s in a text file:
+
+
+      ((a-z)|(A-Z)).((a-z)|'|/-)*.s.(/.| |/?|!|"|')
+
+* start with a lower or upper case letter : 
+
+
+      ((a-z)|(A-Z))
+* followed by a combination of letter ' or - : 
+
+
+      ((a-z)|'|/-)*
+* followed by a s : 
+
+
+      s
+* finish with a withe space or ?!"' after the s:  
+
+
+
+      (/.| |/?|!|"|')
+
+
+
+![search table](https://github.com/JoseIgnacioRetamalThomsen/graph-theory-project/blob/master/imgs/search_end_s.png)
+
+
+![search normal](https://github.com/JoseIgnacioRetamalThomsen/graph-theory-project/blob/master/imgs/search_normal.png)
+
+![search log](https://github.com/JoseIgnacioRetamalThomsen/graph-theory-project/blob/master/imgs/search_log.png)
+
+
+# Conclusion
+
+  I got a better understanding of how automatons  can be use for solve programing problems, while learning a new programing language. The develop of the project help me to understand how NFA works and know more about they limits.
+ 
+ The most challenging part of the project was to fully understand Thomson's construction for then implement it on the map and node algorithm. Python was challenging on the start but then I got use to it. 
+
+I'm Happy with the result of the project because I was able to implement both algorithms as I wanted from the start, still I think I did not calculate well the time it would take me to write the final report.
+
+Some future enchantments that can be done are : 
+* Catch errors when wrong formatted regex are input.
+* Remove dot for concatenation.
+* UI more informative .
+* Map algorithm can be optimized.
+* Fix node algorithm followes() method that goes in infinite loop with double Kleene star(I had planned to test the algorithms using the regex that tell if a binary number is 3 multiple but node algorithm throws stack over flow exception ((0|((1.(0.1*.(0.0)*.0)*.1))*)*) ).
+
+
+# References
+
+### Shunting yard algorithm
+
+[Shunting Yard Algorithm](http://www.oxfordmathcenter.com/drupal7/node/628)
+
+[Wikipedia](https://en.wikipedia.org/wiki/Shunting-yard_algorithm)
+
+### Thomson's construction
+
+ [Thompson's construction](https://en.wikipedia.org/wiki/Thompson%27s_construction)
+
+[Converting a regular expression to a NFA - Thompson's Algorithm](http://www.cs.may.ie/staff/jpower/Courses/Previous/parsing/node5.html)
+
+ Michael Sipser. Introduction to the Theory of Computation. International Thomson Publishing, 3rd edition, 1996. (Page 68)
+
+[How are finite automata implemented in code?](https://stackoverflow.com/questions/35272592/how-are-finite-automata-implemented-in-code/35279645)
+
+### Python
+
+ [Understanding the main method of python](https://stackoverflow.com/questions/22492162/understanding-the-main-method-of-python)
+
+[Scroll bar](https://stackoverflow.com/questions/13832720/how-to-attach-a-scrollbar-to-a-text-widget)
+
+[UI](https://www.python-course.eu/tkinter_layout_management.php)
+
+[Unit Test](https://docs.python.org/3/library/unittest.html)
+
+[Time](https://docs.python.org/3/library/time.html)
+
+[Tkinter](https://docs.python.org/3/library/tkinter.html)
+
+ 
+
+
+
+
