@@ -12,13 +12,15 @@ class Runner:
 
         ThomsonsMap.NFA.initStateCount(1)
         # a/..b.
-        print(Shunting.Converter().toPofix("a./.b"))
+        print(Shunting.Converter().toPofix("a.b"))
 
         nfa = ThomsonsMap.NFA('a')
         nfa1 = ThomsonsMap.NFA()
         nfa.union(nfa1)
        # nfa.star()
         nfa.tf.printF()
+        po = Shunting.Converter().toPofix("a.b")
+        nfa = ThomsonsMap.compile("ab.c.")
 
        # print(Thomsons.match("((a-z)|(A-Z)|(0-9)).((a-z)|(A-Z)|(0-9)|_|/.)*.@.((a-z)|(A-Z)|/.)*./..(((a-z)|(A-Z)).((a-z)|(A-Z)).((a-z)|(A-Z))|((a-z)|(A-Z)).((a-z)|(A-Z)))","my.g7@gmail.com.ar"))
        #

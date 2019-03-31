@@ -5,7 +5,7 @@ from tkinter import filedialog
 import time
 import Thomsons
 import ThomsonsMap
-
+import Shunting
 
 class Main_Window:
     def __init__(self, master):
@@ -90,10 +90,10 @@ class SingleWindow:
         self.check2 = Checkbutton(self.frameLeft, text="Algorithm 2", variable=self.var2, command=self.checkbox2)
 
         self.label1 = tk.Label(self.frameLeft, text="Regex :")
-        self.inReg = tk.Entry(self.frameLeft, width=50)
+        self.inReg = tk.Entry(self.frameLeft, width=50,font=("Courier", 21))
 
         self.label2 = tk.Label(self.frameLeft, text="String :")
-        self.inStr = tk.Entry(self.frameLeft, width=50)
+        self.inStr = tk.Entry(self.frameLeft, width=50,font=("Courier", 21))
 
         self.matchButton = tk.Button(self.frameLeft, text='Match', width=25, command=self.match)
         self.quitButton = tk.Button(self.frameLeft, text='Quit', width=25, command=self.close_windows)
@@ -155,14 +155,14 @@ class SingleWindow:
 
     def match(self):
         if (self.var1.get() == 1):
-            result = Thomsons.match(self.inReg.get(), self.inStr.get())
+            result = Thomsons.match(self.inReg.get().strip(), self.inStr.get().strip())
             if (result == 1):
                 self.otext.insert(INSERT, "[" + self.inReg.get() + "," + self.inStr.get() + "] -> " + "Yes\n")
             else:
                 self.otext.insert(INSERT, "[" + self.inReg.get() + "," + self.inStr.get() + "] -> " + "No\n")
         else:
-            nfa = ThomsonsMap.compile(self.inReg.get())
-            result = nfa.run(self.inStr.get())
+            nfa = ThomsonsMap.compile( Shunting.Converter().toPofix(self.inReg.get().strip()))
+            result = nfa.run(self.inStr.get().strip())
             if (result == 1):
                 self.otext.insert(INSERT, "[" + self.inReg.get() + "," + self.inStr.get() + "] -> " + "Yes\n")
             else:
@@ -188,7 +188,7 @@ class SingleWindowFile:
         self.check2 = Checkbutton(self.frameLeft, text="Algorithm 2", variable=self.var2, command=self.checkbox2)
 
         self.label1 = tk.Label(self.frameLeft, text="Regex :")
-        self.inReg = tk.Entry(self.frameLeft, width=50)
+        self.inReg = tk.Entry(self.frameLeft, width=50,font=("Courier", 21))
 
         self.selectButton = tk.Button(self.frameLeft, text='Select File', width=25, command=self.selectFile)
         self.filename = tk.Label(self.frameLeft, text="Please select file ^")
@@ -261,7 +261,7 @@ class SingleWindowFile:
         if (self.file is None): return
 
         if (self.var1.get() == 1):
-            start = time.perf_counter_ns()
+            start = time.perf_counter()
 
             run = Thomsons.Runner(self.inReg.get().strip())
             try:
@@ -275,7 +275,7 @@ class SingleWindowFile:
 
             result = run.finish()
 
-            end = time.perf_counter_ns()
+            end = time.perf_counter()
 
             trant = end - start
 
@@ -291,7 +291,7 @@ class SingleWindowFile:
 
 
         else:
-            start = time.perf_counter_ns()
+            start = time.perf_counter()
             run = ThomsonsMap.Runner(self.inReg.get().strip())
             try:
 
@@ -304,7 +304,7 @@ class SingleWindowFile:
 
             result = run.finish()
 
-            end = time.perf_counter_ns()
+            end = time.perf_counter()
 
             trant = end - start
 
@@ -334,9 +334,11 @@ class SearchFile:
         self.check1 = Checkbutton(self.frameLeft, text="Algorithm 1", variable=self.var1, command=self.checkbox)
         self.var2 = IntVar()
         self.check2 = Checkbutton(self.frameLeft, text="Algorithm 2", variable=self.var2, command=self.checkbox2)
+        self.var3 = IntVar()
+        self.check3 = Checkbutton(self.frameLeft, text="Show result", variable=self.var3)
 
         self.label1 = tk.Label(self.frameLeft, text="Regex :")
-        self.inReg = tk.Entry(self.frameLeft, width=50)
+        self.inReg = tk.Entry(self.frameLeft, width=50,font=("Courier", 21))
 
         self.selectButton = tk.Button(self.frameLeft, text='Select File', width=25, command=self.selectFile)
         self.filename = tk.Label(self.frameLeft, text="Please select file ^")
@@ -347,6 +349,7 @@ class SearchFile:
         # pack frame left
         self.check1.pack()
         self.check2.pack()
+        self.check3.pack()
         self.label1.pack()
         self.inReg.pack()
         self.selectButton.pack()
@@ -459,10 +462,14 @@ class SearchFile:
 
         trant = endtime - starttime
 
-
-        self.otext.insert(INSERT, "Match: " + str(len(matchs)) + "\n"+ "Result format : (line, start, end) : \n"+  " time: " +
-                          str(trant) + "\n"+
-                          str(matchs) + "\n")
+        if(self.var3.get()==0):
+            self.otext.insert(INSERT, "Match: " + str(
+                len(matchs)) + "\n" + "Result format : (line, start, end) : \n" + " time: " +
+                              str(trant) + "\n" )
+        else:
+            self.otext.insert(INSERT, "Match: " + str(len(matchs)) + "\n"+ "Result format : (line, start, end) : \n"+  " time: " +
+                              str(trant) + "\n"+
+                              str(matchs) + "\n")
 
 
 
