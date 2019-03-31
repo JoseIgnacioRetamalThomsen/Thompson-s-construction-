@@ -85,9 +85,9 @@ class SingleWindow:
 
         # frame left
         self.var1 = IntVar()
-        self.check1 = Checkbutton(self.frameLeft, text="Algorithm 1", variable=self.var1, command=self.checkbox)
+        self.check1 = Checkbutton(self.frameLeft, text="Node Algorithm", variable=self.var1, command=self.checkbox)
         self.var2 = IntVar()
-        self.check2 = Checkbutton(self.frameLeft, text="Algorithm 2", variable=self.var2, command=self.checkbox2)
+        self.check2 = Checkbutton(self.frameLeft, text="Map Algorithm", variable=self.var2, command=self.checkbox2)
 
         self.label1 = tk.Label(self.frameLeft, text="Regex :")
         self.inReg = tk.Entry(self.frameLeft, width=50,font=("Courier", 21))
@@ -131,9 +131,9 @@ class SingleWindow:
         self.var2.set(0)
 
     def checkbox(self):
-        print(self.var1.get())
+
         if self.var1.get() == 0:
-            print(self.var1.get())
+
             self.var2.set(1)
         else:
             self.var2.set(0)
@@ -183,9 +183,9 @@ class SingleWindowFile:
 
         # frame left
         self.var1 = IntVar()
-        self.check1 = Checkbutton(self.frameLeft, text="Algorithm 1", variable=self.var1, command=self.checkbox)
+        self.check1 = Checkbutton(self.frameLeft, text="Node Algorithm", variable=self.var1, command=self.checkbox)
         self.var2 = IntVar()
-        self.check2 = Checkbutton(self.frameLeft, text="Algorithm 2", variable=self.var2, command=self.checkbox2)
+        self.check2 = Checkbutton(self.frameLeft, text="Map Algorithm", variable=self.var2, command=self.checkbox2)
 
         self.label1 = tk.Label(self.frameLeft, text="Regex :")
         self.inReg = tk.Entry(self.frameLeft, width=50,font=("Courier", 21))
@@ -229,9 +229,9 @@ class SingleWindowFile:
         self.var2.set(0)
 
     def checkbox(self):
-        print(self.var1.get())
+
         if self.var1.get() == 0:
-            print(self.var1.get())
+
             self.var2.set(1)
         else:
             self.var2.set(0)
@@ -331,9 +331,9 @@ class SearchFile:
 
         # frame left
         self.var1 = IntVar()
-        self.check1 = Checkbutton(self.frameLeft, text="Algorithm 1", variable=self.var1, command=self.checkbox)
+        self.check1 = Checkbutton(self.frameLeft, text="Node Algorithm", variable=self.var1, command=self.checkbox)
         self.var2 = IntVar()
-        self.check2 = Checkbutton(self.frameLeft, text="Algorithm 2", variable=self.var2, command=self.checkbox2)
+        self.check2 = Checkbutton(self.frameLeft, text="Map Algorithm", variable=self.var2, command=self.checkbox2)
         self.var3 = IntVar()
         self.check3 = Checkbutton(self.frameLeft, text="Show result", variable=self.var3)
 
@@ -380,9 +380,7 @@ class SearchFile:
         self.var2.set(0)
 
     def checkbox(self):
-        print(self.var1.get())
         if self.var1.get() == 0:
-            print(self.var1.get())
             self.var2.set(1)
         else:
             self.var2.set(0)
@@ -441,7 +439,7 @@ class SearchFile:
                     start = i;
                     stop = 0
                     for x in range(start, len(line)):
-                        # print(x)
+
                         if (runc.run(line[x])):
                             stop = x
                             if (runc.check()):
@@ -487,9 +485,9 @@ class MatchFileLine:
 
         # frame left
         self.var1 = IntVar()
-        self.check1 = Checkbutton(self.frameLeft, text="Algorithm 1", variable=self.var1, command=self.checkbox)
+        self.check1 = Checkbutton(self.frameLeft, text="Node Algorithm", variable=self.var1, command=self.checkbox)
         self.var2 = IntVar()
-        self.check2 = Checkbutton(self.frameLeft, text="Algorithm 2", variable=self.var2, command=self.checkbox2)
+        self.check2 = Checkbutton(self.frameLeft, text="Map Algorithm", variable=self.var2, command=self.checkbox2)
         self.var3 = IntVar()
         self.check3 = Checkbutton(self.frameLeft, text="Show result", variable=self.var3)
 
@@ -536,9 +534,9 @@ class MatchFileLine:
         self.var2.set(0)
 
     def checkbox(self):
-        print(self.var1.get())
+
         if self.var1.get() == 0:
-            print(self.var1.get())
+
             self.var2.set(1)
         else:
             self.var2.set(0)
