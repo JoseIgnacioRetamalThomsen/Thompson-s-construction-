@@ -453,6 +453,14 @@ class Runner:
         # check if any of the last state is accepted
         return (self.nfa.acceptState in self.actualState)
 
+    def clear(self):
+        # actual state
+        actualState = set()
+
+        # results states after run one symbol
+        nextState = set()
+        # add initial state
+        self.actualState |= self.nfa.tf.getTransition(0, -1)
 
 class RunChar:
     """
